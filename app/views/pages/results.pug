@@ -1,0 +1,29 @@
+extends ../layout
+
+block content
+    .container
+        .row
+            .panel.panel-primary
+                .panel-heading
+                    h3 #{name}
+                .panel-body
+                    if movies && movies.length > 0
+                        each item in movies
+                            .col-md-2
+                                .thumbnail
+                                    a(href='/movie/'+item._id)
+                                        img(src=item.poster, alt=item.title)
+                                    .caption
+                                        h3= item.title
+                                        p: a.btn.btn-primary(href='/movie/'+item._id, role='button' ) 观看预告
+            ul.pagination
+                - for (var i = 1; i < totalPages+1; i++)
+                    if i == currentPage
+                        li.active
+                            span= currentPage
+                    else
+                        li
+                            a(href= '/results?p='+ i + '&name=' + name + '&classify=' + classifyId) #{i}
+
+
+

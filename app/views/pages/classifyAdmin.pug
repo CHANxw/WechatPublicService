@@ -1,0 +1,15 @@
+extends ../layout
+
+block content
+    .container
+        .row
+            form.form-horizontal#formClassify(method='post', action='/admin/classify')
+                .form-group
+                    label.col-sm-3.control-label(for='inputClassify') 电影分类
+                    .col-sm-9
+                        input#inputClassify.form-control(type='text', name='classify[name]', value=classify.name)
+                .form-group
+                    .col-sm-offset-3.col-sm-9
+                        button.btn.btn-default.btn-classify(type='submit') 录入
+                        | &nbsp;&nbsp;
+                        span.alertText

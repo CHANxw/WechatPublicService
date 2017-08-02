@@ -1,0 +1,122 @@
+extends ../wechat
+
+block content
+    h1 语音识别
+    p#title
+    p#year
+    p#director
+    div#poster
+    script.
+        wx.config({
+            debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+            appId: 'wxf5e8102767fbc3d2', // 必填，公众号的唯一标识
+            timestamp: '#{timestamp}', // 必填，生成签名的时间戳
+            nonceStr: '#{nonceStr}', // 必填，生成签名的随机串
+            signature: '#{signature}',// 必填，签名，见附录1
+            jsApiList: [
+                'startRecord',
+                'stopRecord',
+                'onVoiceRecordEnd',
+                'translateVoice',
+                'onMenuShareTimeline',
+                'onMenuShareAppMessage',
+                'onMenuShareQQ',
+                'onMenuShareWeibo',
+                'onMenuShareQZone',
+                'previewImage', // 预览图片接口
+            ] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+        })
+        wx.ready(function () {
+            wx.checkJsApi({
+                jsApiList: ['onVoiceRecordEnd'], // 需要检测的JS接口列表，所有JS接口列表见附录2,
+                success: function (res) {
+                    console.log(res)
+                }
+            })
+            var shareMsg = {
+                title: '分享', // 分享标题
+                desc: '分享描述', // 分享描述
+                link: '120.77.36.5', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                imgUrl: 'http://wx2.sinaimg.cn/mw690/87bae5f4ly1fhinmm061mj20qo0qo3z0.jpg', // 分享图标
+                type: 'link', // 分享类型,music、video或link，不填默认为link
+                dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+                success: function () {
+                    // 用户确认分享后执行的回调函数
+                    window.alert('分享成功')
+                },
+                cancel: function () {
+                    // 用户取消分享后执行的回调函数
+                    window.alert('取消分享')
+                }
+            }
+            wx.onMenuShareAppMessage(shareMsg)
+            var isRecording = false
+            var picList
+            $('#poster').on('click', function () {
+                wx.previewImage(picList)
+            })
+            $('h1').on('click', function () {
+                console.log('点击')
+                if (!isRecording) {
+                    isRecording = true
+                    wx.startRecord({
+                        cancel () {
+                            window.alert('取消了')
+                        }
+                    })
+                    return
+                }
+                isRecording = false
+                wx.stopRecord({
+                    success (res) {
+                        var localId = res.localId
+                        wx.translateVoice({
+                            localId: localId,
+                            isShowProgressTips: 1,
+                            success (res) {
+                                var result = res.translateResult
+                                $.ajax({
+                                    type: 'get',
+                                    url: 'https://api.douban.com/v2/movie/search?q=' + result,
+                                    dataType: 'jsonp',
+                                    jsonp: 'callback',
+                                    success: function (data) {
+                                        var subject = data.subjects[0]
+                                        $('#title').html(subject.title)
+                                        $('#year').html(subject.year)
+                                        $('#director').html(subject.directors[0].name)
+                                        $('#poster').html('<img src="' + subject.images.large + '"/>')
+                                        shareMsg = {
+                                            title: subject.title, // 分享标题
+                                            desc: subject.title + '相关信息', // 分享描述
+                                            link: '120.77.36.5', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                                            imgUrl: subject.images.large, // 分享图标
+                                            success: function () {
+                                                // 用户确认分享后执行的回调函数
+                                                window.alert('分享成功')
+                                            },
+                                            cancel: function () {
+                                                // 用户取消分享后执行的回调函数
+                                                window.alert('取消分享')
+                                            }
+                                        }
+                                        picList = {
+                                            current: subject.images.large,
+                                            urls: [subject.images.large]
+                                        }// 图片数据初始化
+                                        data.subjects.forEach(function (item) {
+                                            picList.urls.push(item.images.large)
+                                        })
+                                        if (picList.urls.length !== 1) {
+                                            picList.urls = picList.urls.splice(1, picList.urls.length - 1)
+                                        }
+                                        wx.onMenuShareAppMessage(shareMsg)
+                                    }
+                                })
+                            }
+                        })
+                    }
+                })
+            })
+        })
+

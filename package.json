@@ -1,0 +1,31 @@
+{
+  "name": "WechatPublicService",
+  "version": "0.0.1",
+  "description": "A project about the wechat public service",
+  "author": "jokerchan <wb_cxw@163.com>",
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "bluebird": "^3.5.0",
+    "ejs": "^2.5.6",
+    "fs": "0.0.1-security",
+    "koa": "^2.3.0",
+    "koa-body": "^2.3.0",
+    "koa-bodyparser": "^4.2.0",
+    "koa-request": "^1.0.0",
+    "koa-router": "^7.2.1",
+    "koa-serve": "^0.1.7",
+    "koa-session": "^5.4.0",
+    "koa-static": "^4.0.1",
+    "koa-views": "^6.0.2",
+    "lodash": "^4.17.4",
+    "moment": "^2.18.1",
+    "mongoose": "^4.11.4",
+    "mongoose-pages": "0.0.3",
+    "path": "^0.12.7",
+    "pug": "^2.0.0-rc.2",
+    "raw-body": "^2.2.0",
+    "request": "^2.81.0",
+    "sha1": "^1.1.1",
+    "xml2js": "^0.4.17"
+  }
+}

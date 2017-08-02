@@ -1,0 +1,34 @@
+extends ../layout
+
+block content
+    .container
+        .row
+            if classify.length
+                table.table.table-hover.table-bordered
+                    thead
+                        tr
+                            th 分类
+                            th 电影数量
+                            th 录入时间
+                            th 查看
+                            th 更新
+                            th 删除
+                    tbody
+                        each item in classify
+                            tr(class='item-id-' + item._id)
+                                td= item.name
+                                td= item.movies.length || 0
+                                td= moment(item.meta.updateAt).format('MM/DD/YYYY')
+                                td: a(target='_blank', href='/admin/movie/list?classify=' + item._id) 查看
+                                td: a(target='_blank', href='/admin/movie/update/' + item._id) 修改
+                                td
+                                    button.btn.btn-danger.del(type='button', data-id=item._id) 删除
+            else
+                span 还没有创建分类项目哟
+    script(src='/js/admin.js')
+
+
+
+
+
+

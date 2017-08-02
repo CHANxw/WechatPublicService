@@ -1,0 +1,69 @@
+extends ../layout
+
+block content
+    .container
+        .row
+            //enctype='multipart/form-data' 分隔上传，使其能多数据类型上传
+            form.form-horizontal(method='post', action='/admin/movie',enctype='multipart/form-data')
+                if !movie._id
+                    .form-group
+                        label.col-sm-2.control-label 豆瓣搜索
+                        .col-sm-4
+                            input.form-control#doubanSearch(type='text')
+                        label.col-sm-2.control-label 豆瓣id同步
+                        .col-sm-3
+                            input.form-control#douban(type='text')
+                if movie._id
+                    input(type='hidden', name='movie[_id]', value=movie._id)
+                .form-group
+                    label.col-sm-2.control-label(for='inputclassify') 电影分类
+                    .col-sm-9
+                        input#inputclassify.form-control(type='text', name='movie[classifyName]', value=movie.classifyName)
+                if classifys.length && classifys.length > 0
+                    .form-group
+                        label.col-sm-2.control-label 分类选择
+                        each sort in classifys
+                            label.radio-inline
+                            if movie._id
+                                input(type='radio', name='movie[classify]', value=sort._id,
+                                checked= sort._id.toString() === movie.classify.toString())
+                                | #{sort.name}
+                            else
+                                input(type='radio', name='movie[classify]', value=sort._id)
+                                | #{sort.name}
+                .form-group
+                    label.col-sm-2.control-label(for='inputTitle') 电影名字
+                    .col-sm-9
+                        input#inputTitle.form-control(type='text', name='movie[title]', value=movie.title)
+                .form-group
+                    label.col-sm-2.control-label(for='inputDirector') 电影导演
+                    .col-sm-9
+                        input#inputDirector.form-control(type='text', name='movie[director]', value=movie.director)
+                .form-group
+                    label.col-sm-2.control-label(for='inputCountry') 上映国家
+                    .col-sm-9
+                        input#inputCountry.form-control(type='text', name='movie[country]', value=movie.country)
+                .form-group
+                    label.col-sm-2.control-label(for='inputLanguage') 语言
+                    .col-sm-9
+                        input#inputLanguage.form-control(type='text', name='movie[language]', value=movie.language)
+                .form-group
+                    label.col-sm-2.control-label(for='inputPoster') 电影海报地址
+                    .col-sm-9
+                        input#inputPoster.form-control(type='text', name='movie[poster]', value=movie.poster)
+                .form-group
+                    label.col-sm-2.control-label(for='inputFlash') 电影预告地址
+                    .col-sm-9
+                        input#inputFlash.form-control(type='text', name='movie[flash]', value=movie.flash)
+                .form-group
+                    label.col-sm-2.control-label(for='inputYear') 上映年份
+                    .col-sm-9
+                        input#inputYear.form-control(type='text', name='movie[year]', value=movie.year)
+                .form-group
+                    label.col-sm-2.control-label(for='inputSummary') 电影简介
+                    .col-sm-9
+                        input#inputSummary.form-control(type='text', name='movie[summary]', value=movie.summary)
+                .form-group
+                    .col-sm-offset-2.col-sm-10
+                        button.btn.btn-default(type='submit') 录入
+    script(src='/js/admin.js')

@@ -1,0 +1,18 @@
+extends ../layout
+
+block content
+    .container
+        .row
+            .col-md-5
+                form(method='POST', action='/user/signin')
+                    .modal-body
+                        .form-group
+                            label(for='signinName') 用户名
+                            input#signinName.form-control(type='text', name='user[name]')
+                        .form-group
+                            label(for='signinPassWord') 密码
+                            input#signinPassWord.form-control(type='password', name='user[password]')
+                    .modal-footer
+                        button.btn.btn-default(type='button', data-dismiss='modal') 关闭
+                        button.btn.btn-success(type='submit') 提交
+

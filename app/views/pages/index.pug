@@ -1,0 +1,21 @@
+extends ../layout
+
+block content
+    .container
+        .row
+            each classify in classifys
+                .panel.panel-primary
+                    .panel-heading
+                        h3
+                            a(href='/results?classify=' + classify._id + '&p=1&name=' + classify.name, style='color: #fff') #{classify.name}
+                    .panel-body
+                        if classify.movies && classify.movies.length > 0
+                            each item in classify.movies
+                                .col-md-2
+                                    .thumbnail
+                                        a(href='/movie/' + item._id)
+                                            img(src=item.poster, alt=item.title)
+                                        .caption
+                                            h3= item.title
+                                            p: a.btn.btn-primary(href='/movie/' + item._id, role='button' ) 观看预告
+
